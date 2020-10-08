@@ -24,7 +24,8 @@ mutate(Education_F = recode(Education_F, '7' = 6L)) %>% # combine 6-7 to 6
 mutate_at(vars(Birth_Weight, Parity, Weight_M, Weight_F,Gestation), na_if, 999) %>% 
 mutate_at(vars(Age_M, Height_M, Age_F,Race_M, Race_F, Height_F, Income,Quit_Time), na_if, 99) %>%
 mutate_at(vars(Income, Quit_Time, Number_Smoke), na_if, 98) %>%
-mutate_at(vars(Education_M, Education_F, Smoke), na_if, 9) %>% # replace unknown variables to NA
+mutate_at(vars(Education_M, Education_F, Smoke), na_if, 9) %>%
+mutate_at(vars(Marital), na_if, 0) %>%  #replace unknown variables to NA
 mutate(Race_M = as.factor(Race_M), Race_F = as.factor(Race_F),
        Education_M = as.factor(Education_M), Education_F = as.factor(Education_F),
       Income = as.factor(Income), Marital = as.factor(Marital),
