@@ -113,3 +113,14 @@ model_2 <- train(Birth_Weight ~ Smoke * Gestation + Parity + Height_M + Weight_M
 print(model_1)
 print(model_2)
 
+
+#BOOTSTRAPPING
+#First for newmdl_2
+
+
+
+
+
+
+
+
