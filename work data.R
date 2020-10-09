@@ -117,7 +117,35 @@ print(model_2)
 #BOOTSTRAPPING
 #First for newmdl_2
 
+# Number of times to sample 
+NBoot <- 1000
 
+# Create store for result
+bootCoefs <- array(dim = c(NBoot, 15))
+
+#Loop to create 1000 samples
+for (i in 1:NBoot) {
+  #Create data
+  newData <- data[sample(x = nrow(data),
+                         size = nrow(data),
+                         replace = TRUE), ]
+  #Create model for new data
+  mdl <- lm(Birth_Weight ~  Smoke * Gestation + Parity + Height_M + Race_M + Weight_M ,
+     data = newData)
+  
+  #assign coefficients to store
+  bootCoefs[i, ] <- coefficients(mdl)
+  
+}
+
+#rename columns
+colnames(bootCoefs) <- c("(Intercept)", "Smoke1", "Smoke2", "Smoke3", "Gestation", "Parity", "Height_M", "Race_M6", "Race_M7",
+"Race_M8", "Race_M9", "Weight_M", "Smoke1:Gestation", "Smoke2:Gestation", "Smoke3:Gestation")
+
+#Get 95% confidence intervals for coefficients 
+
+bootCI <- apply(bootCoefs, 2, quantile, c(0.025, 0.975))
+bootCI
 
 
 
