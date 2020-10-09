@@ -145,10 +145,7 @@ colnames(bootCoefs) <- c("(Intercept)", "Smoke1", "Smoke2", "Smoke3", "Gestation
 #Get 95% confidence intervals for coefficients 
 
 bootCI <- apply(bootCoefs, 2, quantile, c(0.025, 0.975))
-bootCI
 
-
-
-
-
+#Compare to coefficients from model
+knitr::kable(cbind(data.frame(coef(newmdl_2)), t(data.frame(bootCI))))
 
