@@ -169,17 +169,43 @@ bootCI_newmdl_2 <- bootCI_newmdl_2 %>%
 
 CI_mod_boot <- rbind(bootCI_newmdl_2, modelCI)
 
+#Relevel for plot
+CI_mod_boot$coef_names <- factor(CI_mod_boot$coef_names, levels = c("(Intercept)", "Smoke1","Smoke2", "Smoke3", "Gestation", "Parity", "Height_M",  "Race_M6", "Race_M7", 
+"Race_M8", "Race_M9", "Weight_M", "Smoke1:Gestation", "Smoke2:Gestation", "Smoke3:Gestation"))
 
 
+levels(CI_mod_boot$coef_names)
 #Plot error bars for bootstrap and model CI
 ggplot(CI_mod_boot,
        aes(y = coef_names, xmin= `2.5%`, xmax = `97.5%`, colour = group)) +
   geom_errorbarh(alpha = 0.7, 
-                 size = 1) +
-  theme_classic() +
+                 size = 1.5) +
+  theme_classic(base_size = 30) +
   geom_vline(aes(xintercept=0)) +
-  labs(title = "95% Confidence Intervals for the bootstrap method and linear model method",
+  labs(title = "95% Confidence Intervals for the bootstrap 
+       method and linear model method",
        x = "Coefficient Estimate",
-       y = "Coefficient") 
+       y = "Coefficient",
+       colour = "Method") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
