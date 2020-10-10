@@ -145,26 +145,37 @@ bootstrap <- function(form, NBoot) {
   #rename columns
   colnames(bootCI) <- colnames(t(data.frame(coef(mdl))))
   
+  #make data frame with model coef for comparison
   return(cbind(data.frame(coef = coef(lm(form, data = data))), t(data.frame(bootCI))))
 }
 
-bootstrap("Birth_Weight ~  Smoke * Gestation + Parity + Height_M + Race_M + Weight_M", 1000)
+#Find bootstrap CI for newmdl_2
+bootCI_newmdl_2 <- bootstrap("Birth_Weight ~  Smoke * Gestation + Parity + Height_M + Race_M + Weight_M", 1000)
 
+#Add column of coef names
+bootCI_newmdl_2$coef_names = rownames(bootCI_newmdl_2)
 
+#Get model CI of newmdl_2
+modelCI <- data.frame(confint(newmdl_2))
+colnames(modelCI) <- c("model_min", "model_max")
+modelCI$coef_names <- rownames(modelCI)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+#Plot error bars for bootstrap and model CI
+ggplot(bootCI_newmdl_2,
+       aes(y = coef_names, xmin= `2.5%`, xmax = `97.5%`)) +
+  geom_errorbarh(col = "blue", 
+                 alpha = 0.5, 
+                 size = 1) +
+  geom_errorbarh(data = modelCI, 
+                 aes(xmin = model_min, xmax = model_max), 
+                 alpha = 0.5,
+                 size = 1,
+                 col = "red") +
+  theme_classic() +
+  geom_vline(aes(xintercept=0)) +
+  labs(title = "95% Confidence Intervals for the bootstrap method and linear model method",
+       x = "Coefficient Estimate",
+       y = "Coefficient") 
 
 
 
