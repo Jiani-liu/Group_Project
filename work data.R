@@ -48,7 +48,7 @@ Anova(bigmdl_5)
 summary(bigmdl_5)
 
 #best model using BIC backward elimination
-smallmdl_2 <- stepAIC(bigmdl, k = log(nrow(data)))
+smallmdl_2 <- step(bigmdl, k = log(nrow(data)))
 summary(smallmdl_2)
 Anova(smallmdl_2)
 
@@ -117,12 +117,19 @@ print(model_2)
 
 # normality assumption:
 # histogram of residuals
-hist(smallmdl$residuals) # for model 1 
-hist(newmdl_2$residuals) # for model 2 
+par(mfrow = c(1,2))
+hist_1 <- hist(smallmdl$residuals, main="Histogram of residuals model A",
+               xlab = 'Residuals model A', cex.axis = 1.25,
+               cex.lab = 1.25, col = 'coral3') # for model 1 
+hist_2 <- hist(newmdl_2$residuals, main="Histogram of residuals model B",
+               xlab = 'Residuals model B', cex.axis = 1.25,
+               cex.lab = 1.25, col = 'seagreen1') # for model 2 
 
 # qq norm plot of residuals
-qqnorm(smallmdl$residuals) # for model 1
-qqnorm(newmdl_2$residuals) # for model 2
+qqnorm(smallmdl$residuals, cex.axis = 1.25, main = "Normal Q-Q Plot for model A ",
+       cex.lab = 1.25, col = 'palevioletred4') # for model 1
+qqnorm(newmdl_2$residuals, cex.axis = 1.25, main = "Normal Q-Q Plot for model B",
+       cex.lab = 1.25, col = 'turquoise4') # for model 2
 
 # Shapiro-Wilks test
 shapiro.test(residuals(smallmdl)) #model 1
@@ -131,8 +138,13 @@ shapiro.test(residuals(newmdl_2)) #model 2
 # constant error variance assumption
 # plot of residuals and fitted values
 # these plots also check the linearity in the model for signal
-plot(x = fitted(smallmdl), y = residuals(smallmdl)) # model 1
-plot(x = fitted(newmdl_2), y = residuals(newmdl_2)) # model 2
+
+plot(x = fitted(smallmdl), y = residuals(smallmdl), cex.axis = 1.25,
+     main = "Residuals vs fitted Model A ", xlab = 'Fitted values',
+     ylab  = "Residuals", cex.lab = 1.25, col = 'red3') # model 1
+plot(x = fitted(newmdl_2), y = residuals(newmdl_2), cex.axis = 1.25,
+     main = "Residuals vs fitted Model B ", xlab = 'Fitted values',
+     ylab  = "Residuals", cex.lab = 1.25, col = 'navyblue') # model 2
 
 # Breusch - Pagan test
 ncvTest(smallmdl) # model 1
@@ -140,13 +152,17 @@ ncvTest(newmdl_2) # model 2
 
 # check independence
 # plot of residuals in observation order
-plot (seq(1,100), residuals(smallmdl)[1:100], type="l", xlab="Sequence") # model 1
-points(seq(1,100), residuals(smallmdl)[1:100])
-abline (h=0,lty=2)
+plot (seq(1,100), residuals(smallmdl)[1:100], type="l", xlab="Sequence",
+      ylab = "Residuals", main = "Residuals in order model A", cex.lab = 1.25, 
+      cex.axis = 1.25, col = "palevioletred4", lwd = 1.5) # model 1
+points(seq(1,100), residuals(smallmdl)[1:100], col = "palevioletred4")
+abline (h=0,lty=3, col = "palevioletred4", lwd = 3) # model 1
 
-plot (seq(1,100), residuals(newmdl_2)[1:100], type="l", xlab="Sequence") # model 2
-points(seq(1,100), residuals(newmdl_2)[1:100])
-abline (h=0,lty=2)
+plot (seq(1,100), residuals(newmdl_2)[1:100], type="l", xlab="Sequence", 
+      ylab = "Residuals", main = "Residuals in order model A", cex.lab = 1.25, 
+      cex.axis = 1.25, col = "royalblue4", lwd = 1.5) # model 2
+points(seq(1,100), residuals(newmdl_2)[1:100], col = "royalblue3")
+abline (h=0,lty=2, col = "royalblue2", lwd = 3)
 
 # Formal test - Durbin-Watson test
 durbinWatsonTest(smallmdl) # model 1
