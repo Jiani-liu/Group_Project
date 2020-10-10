@@ -115,37 +115,56 @@ print(model_2)
 
 
 #BOOTSTRAPPING
-#First for newmdl_2
 
-# Number of times to sample 
-NBoot <- 1000
+#Write it as a function
 
-# Create store for result
-bootCoefs <- array(dim = c(NBoot, 15))
+bootstrap <- function(form, NBoot) {
+  #Initialisation
+  set.seed(1234)
+  Ncol <- length(coef(lm(form, data = data)))
+  bootStore <- array(dim = c(NBoot, Ncol))
 
-#Loop to create 1000 samples
-for (i in 1:NBoot) {
-  #Create data
-  newData <- data[sample(x = nrow(data),
-                         size = nrow(data),
-                         replace = TRUE), ]
-  #Create model for new data
-  mdl <- lm(Birth_Weight ~  Smoke * Gestation + Parity + Height_M + Race_M + Weight_M ,
-     data = newData)
+  #Create loop
+  for (i in 1:NBoot) {
+    #Create data
+    newData <- data[sample(x = nrow(data),
+                           size = nrow(data),
+                           replace = TRUE), ]
+    
+    #Create model for new data
+    mdl <- lm(form,
+              data = newData)
+
+    #assign coefficients to store
+    bootStore[i, ] <- coef(mdl)
+  }
   
-  #assign coefficients to store
-  bootCoefs[i, ] <- coefficients(mdl)
+  #Get 95% confidence intervals for coefficients 
+  bootCI <- apply(bootStore, 2, quantile, c(0.025, 0.975))
   
+  #rename columns
+  colnames(bootCI) <- colnames(t(data.frame(coef(mdl))))
+  
+  return(cbind(data.frame(coef = coef(lm(form, data = data))), t(data.frame(bootCI))))
 }
 
-#rename columns
-colnames(bootCoefs) <- c("(Intercept)", "Smoke1", "Smoke2", "Smoke3", "Gestation", "Parity", "Height_M", "Race_M6", "Race_M7",
-"Race_M8", "Race_M9", "Weight_M", "Smoke1:Gestation", "Smoke2:Gestation", "Smoke3:Gestation")
+bootstrap("Birth_Weight ~  Smoke * Gestation + Parity + Height_M + Race_M + Weight_M", 1000)
 
-#Get 95% confidence intervals for coefficients 
 
-bootCI <- apply(bootCoefs, 2, quantile, c(0.025, 0.975))
 
-#Compare to coefficients from model
-knitr::kable(cbind(data.frame(coef(newmdl_2)), t(data.frame(bootCI))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
