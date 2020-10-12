@@ -126,10 +126,15 @@ hist_2 <- hist(newmdl_2$residuals, main="Histogram of residuals model B",
                cex.lab = 1.25, col = 'turquoise4') # for model 2 
 
 # qq norm plot of residuals
+# used bty = "l" from https://stackoverflow.com/questions/22470114/removing-top-and-right-borders-from-boxplot-frame-in-r
 qqnorm(smallmdl$residuals, cex.axis = 1.25, main = "Normal Q-Q Plot for model A ",
-       cex.lab = 1.25, col = 'palevioletred4', bty = "l") # for model 1
+       cex.lab = 1.25, col = 'palevioletred4', bty = "l",
+       ylab = "Sample Residuals") # for model 1
+qqline(smallmdl$residuals)
 qqnorm(newmdl_2$residuals, cex.axis = 1.25, main = "Normal Q-Q Plot for model B",
-       cex.lab = 1.25, col = 'turquoise4', bty = "l") # for model 2
+       cex.lab = 1.25, col = 'turquoise4', bty = "l",
+       ylab = "Sample Residuals") # for model 2
+qqline(newmdl_2$residuals)
 
 
 # Shapiro-Wilks test
@@ -141,11 +146,13 @@ shapiro.test(residuals(newmdl_2)) #model 2
 # these plots also check the linearity in the model for signal
 
 plot(x = fitted(smallmdl), y = residuals(smallmdl), cex.axis = 1.25,
-     main = "Residuals vs fitted Model A ", xlab = 'Fitted values',
-     ylab  = "Residuals", cex.lab = 1.25, col = 'red3') # model 1
+     main = "Comparing residuals for model A 
+     with fitted values", xlab = 'Fitted values',
+     ylab  = "Residuals", cex.lab = 1.25, col = 'palevioletred4', bty = "l") # model 1
 plot(x = fitted(newmdl_2), y = residuals(newmdl_2), cex.axis = 1.25,
-     main = "Residuals vs fitted Model B ", xlab = 'Fitted values',
-     ylab  = "Residuals", cex.lab = 1.25, col = 'navyblue') # model 2
+     main = "Comparing residuals for model B 
+     with fitted values", xlab = 'Fitted values',
+     ylab  = "Residuals", cex.lab = 1.25, col = 'turquoise4', bty = "l") # model 2
 
 # Breusch - Pagan test
 ncvTest(smallmdl) # model 1
