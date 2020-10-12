@@ -218,17 +218,18 @@ bootCI_newmdl_2 <- bootstrap("Birth_Weight ~  Smoke * Gestation + Parity + Heigh
 bootCI_newmdl_2$coef_names = rownames(bootCI_newmdl_2)
 
 
-#Get model CI of newmdl_2
+#Get model CI of newmdl_2, tidy and add column containing model 
 modelCI <- data.frame(confint(newmdl_2))
 colnames(modelCI) <- c("2.5%", "97.5%")
 modelCI$coef_names <- rownames(modelCI)
 modelCI$group <- "Model"
 
-
+#prepare to combine with model by adding a group column containing bootstrap
 bootCI_newmdl_2 <- bootCI_newmdl_2 %>%
   select(-coef) %>%
   mutate(group = "Bootstrap") 
 
+#combine CI for plotting
 CI_mod_boot <- rbind(bootCI_newmdl_2, modelCI)
 
 #Relevel for plot
@@ -236,7 +237,7 @@ CI_mod_boot$coef_names <- factor(CI_mod_boot$coef_names, levels = c("(Intercept)
                                                                     "Race_M8", "Race_M9", "Weight_M", "Smoke1:Gestation", "Smoke2:Gestation", "Smoke3:Gestation"))
 
 
-levels(CI_mod_boot$coef_names)
+
 #Plot error bars for bootstrap and model CI
 ggplot(CI_mod_boot,
        aes(y = coef_names, xmin= `2.5%`, xmax = `97.5%`, colour = group)) +
