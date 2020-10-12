@@ -160,17 +160,20 @@ ncvTest(newmdl_2) # model 2
 
 # check independence
 # plot of residuals in observation order
-plot (seq(1,100), residuals(smallmdl)[1:100], type="l", xlab="Sequence",
-      ylab = "Residuals", main = "Residuals in order model A", cex.lab = 1.25, 
-      cex.axis = 1.25, col = "palevioletred4", lwd = 1.5) # model 1
+plot(seq(1,100), residuals(smallmdl)[1:100], type="l", xlab="Sequence",
+      ylab = "Residuals", main = "Check of independance of residuals 
+     for Model A", cex.lab = 1.25, 
+      cex.axis = 1.25, col = "palevioletred4", lwd = 1.5, bty = "l") # model 1
 points(seq(1,100), residuals(smallmdl)[1:100], col = "palevioletred4")
 abline (h=0,lty=3, col = "palevioletred4", lwd = 3) # model 1
 
-plot (seq(1,100), residuals(newmdl_2)[1:100], type="l", xlab="Sequence", 
-      ylab = "Residuals", main = "Residuals in order model A", cex.lab = 1.25, 
-      cex.axis = 1.25, col = "royalblue4", lwd = 1.5) # model 2
-points(seq(1,100), residuals(newmdl_2)[1:100], col = "royalblue3")
-abline (h=0,lty=2, col = "royalblue2", lwd = 3)
+plot(seq(1,100), residuals(newmdl_2)[1:100], type="l", xlab="Sequence", 
+      ylab = "Residuals", main = "Check of independance of residuals 
+     for Model B", cex.lab = 1.25, 
+      cex.axis = 1.25, col = "turquoise4", lwd = 1.5, bty = "l") # model 2
+points(seq(1,100), residuals(newmdl_2)[1:100], col = "turquoise4")
+abline (h=0,lty=3, col = "turquoise4", lwd = 3)
+
 
 # Formal test - Durbin-Watson test
 durbinWatsonTest(smallmdl) # model 1
@@ -251,7 +254,7 @@ ggplot(CI_mod_boot,
        aes(y = coef_names, xmin= `2.5%`, xmax = `97.5%`, colour = group)) +
   geom_errorbarh(alpha = 0.7, 
                  size = 1.5) +
-  theme_classic(base_size = 30) +
+  theme_classic(base_size = 20) +
   geom_vline(aes(xintercept=0)) +
   labs(title = "95% Confidence Intervals for the bootstrap 
        method and linear model method",
