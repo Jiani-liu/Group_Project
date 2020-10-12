@@ -254,12 +254,13 @@ ggplot(CI_mod_boot,
        aes(y = coef_names, xmin= `2.5%`, xmax = `97.5%`, colour = group)) +
   geom_errorbarh(alpha = 0.7, 
                  size = 1.5) +
-  theme_classic(base_size = 20) +
+  theme_classic(base_size = 16) +
   geom_vline(aes(xintercept=0)) +
   labs(title = "95% Confidence Intervals for the bootstrap 
        method and linear model method",
        x = "Coefficient Estimate",
        y = "Coefficient",
-       colour = "Method") +
-  guides(colour = guide_legend(override.aes = list(alpha = 1)))
+       colour = "") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  theme(legend.position = "top", axis.text = element_text(size=16))
 
