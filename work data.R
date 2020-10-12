@@ -169,3 +169,85 @@ durbinWatsonTest(smallmdl) # model 1
 durbinWatsonTest(newmdl_2) # model 2
 
 
+
+
+
+
+
+
+
+#BOOTSTRAPPING
+
+#Write it as a function
+
+bootstrap <- function(form, NBoot) {
+  #Initialisation
+  set.seed(1234)
+  Ncol <- length(coef(lm(form, data = data)))
+  bootStore <- array(dim = c(NBoot, Ncol))
+  
+  #Create loop
+  for (i in 1:NBoot) {
+    #Create data
+    newData <- data[sample(x = nrow(data),
+                           size = nrow(data),
+                           replace = TRUE), ]
+    
+    #Create model for new data
+    mdl <- lm(form,
+              data = newData)
+    
+    #assign coefficients to store
+    bootStore[i, ] <- coef(mdl)
+  }
+  
+  #Get 95% confidence intervals for coefficients 
+  bootCI <- apply(bootStore, 2, quantile, c(0.025, 0.975))
+  
+  #rename columns
+  colnames(bootCI) <- colnames(t(data.frame(coef(mdl))))
+  
+  #make data frame with model coef for comparison
+  return(cbind(data.frame(coef = coef(lm(form, data = data))), t(data.frame(bootCI))))
+}
+
+#Find bootstrap CI for newmdl_2
+bootCI_newmdl_2 <- bootstrap("Birth_Weight ~  Smoke * Gestation + Parity + Height_M + Race_M + Weight_M", 1000)
+
+#Add column of coef names
+bootCI_newmdl_2$coef_names = rownames(bootCI_newmdl_2)
+
+
+#Get model CI of newmdl_2
+modelCI <- data.frame(confint(newmdl_2))
+colnames(modelCI) <- c("2.5%", "97.5%")
+modelCI$coef_names <- rownames(modelCI)
+modelCI$group <- "Model"
+
+
+bootCI_newmdl_2 <- bootCI_newmdl_2 %>%
+  select(-coef) %>%
+  mutate(group = "Bootstrap") 
+
+CI_mod_boot <- rbind(bootCI_newmdl_2, modelCI)
+
+#Relevel for plot
+CI_mod_boot$coef_names <- factor(CI_mod_boot$coef_names, levels = c("(Intercept)", "Smoke1","Smoke2", "Smoke3", "Gestation", "Parity", "Height_M",  "Race_M6", "Race_M7", 
+                                                                    "Race_M8", "Race_M9", "Weight_M", "Smoke1:Gestation", "Smoke2:Gestation", "Smoke3:Gestation"))
+
+
+levels(CI_mod_boot$coef_names)
+#Plot error bars for bootstrap and model CI
+ggplot(CI_mod_boot,
+       aes(y = coef_names, xmin= `2.5%`, xmax = `97.5%`, colour = group)) +
+  geom_errorbarh(alpha = 0.7, 
+                 size = 1.5) +
+  theme_classic(base_size = 30) +
+  geom_vline(aes(xintercept=0)) +
+  labs(title = "95% Confidence Intervals for the bootstrap 
+       method and linear model method",
+       x = "Coefficient Estimate",
+       y = "Coefficient",
+       colour = "Method") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1)))
+
