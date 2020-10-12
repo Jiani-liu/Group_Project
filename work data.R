@@ -120,16 +120,17 @@ print(model_2)
 par(mfrow = c(1,2))
 hist_1 <- hist(smallmdl$residuals, main="Histogram of residuals model A",
                xlab = 'Residuals model A', cex.axis = 1.25,
-               cex.lab = 1.25, col = 'coral3') # for model 1 
+               cex.lab = 1.25, col = 'palevioletred4') # for model 1 
 hist_2 <- hist(newmdl_2$residuals, main="Histogram of residuals model B",
                xlab = 'Residuals model B', cex.axis = 1.25,
-               cex.lab = 1.25, col = 'seagreen1') # for model 2 
+               cex.lab = 1.25, col = 'turquoise4') # for model 2 
 
 # qq norm plot of residuals
 qqnorm(smallmdl$residuals, cex.axis = 1.25, main = "Normal Q-Q Plot for model A ",
-       cex.lab = 1.25, col = 'palevioletred4') # for model 1
+       cex.lab = 1.25, col = 'palevioletred4', bty = "l") # for model 1
 qqnorm(newmdl_2$residuals, cex.axis = 1.25, main = "Normal Q-Q Plot for model B",
-       cex.lab = 1.25, col = 'turquoise4') # for model 2
+       cex.lab = 1.25, col = 'turquoise4', bty = "l") # for model 2
+
 
 # Shapiro-Wilks test
 shapiro.test(residuals(smallmdl)) #model 1
