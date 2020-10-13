@@ -194,14 +194,14 @@ durbinWatsonTest(newmdl_2) # model 2
 bootstrap <- function(form, NBoot) {
   #Initialisation
   set.seed(1234)
-  Ncol <- length(coef(lm(form, data = data)))
+  Ncol <- length(coef(lm(form, data = datac)))
   bootStore <- array(dim = c(NBoot, Ncol))
   
   #Create loop
   for (i in 1:NBoot) {
     #Create data
-    newData <- data[sample(x = nrow(data),
-                           size = nrow(data),
+    newData <- datac[sample(x = nrow(datac),
+                           size = nrow(datac),
                            replace = TRUE), ]
     
     #Create model for new data
@@ -219,7 +219,7 @@ bootstrap <- function(form, NBoot) {
   colnames(bootCI) <- colnames(t(data.frame(coef(mdl))))
   
   #make data frame with model coef for comparison
-  return(cbind(data.frame(coef = coef(lm(form, data = data))), t(data.frame(bootCI))))
+  return(cbind(data.frame(coef = coef(lm(form, data = datac))), t(data.frame(bootCI))))
 }
 
 #Find bootstrap CI for newmdl_2
